@@ -1,5 +1,0 @@
-Case #1: 3
-Case #2: 2
-
-
-Executed In: 14 ms
