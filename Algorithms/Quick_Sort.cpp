@@ -92,7 +92,7 @@ Best Case = O(n*logn)
 [ The best case occurs when the partition process always picks the middle element as pivot. ]
 
 Space Complexity 
-Worst Case = O(n)
+Worst Case = O(n*n)
 Best Case = O(n*logn)
 
 Pseudo Code
