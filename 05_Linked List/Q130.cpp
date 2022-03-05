@@ -73,26 +73,32 @@ void file_i_o()
 }
 
 /*
-Q125.) Write a Program to reverse the Linked List. (Both Iterative and recursive)
+Q130.) Remove Duplicates in a sorted Linked List.
 
 INPUT:
-2
+5
+
+4
+2 2 4 5
+
+4
+2 2 2 2
+
+3
+1 3 3
+
+4
+1 8 1 4
 
 5
-1 2 3 4 5
-
-10
-0 1 2 3 4 5 6 7 8 9
+1 2 3 5 5
 
 OUTPUT:
-Case #1:
-List : 1 2 3 4 5
-Iterative Reverse : 5 4 3 2 1
-Recursion Reverse : 1 2 3 4 5
-Case #2:
-List : 0 1 2 3 4 5 6 7 8 9
-Iterative Reverse : 9 8 7 6 5 4 3 2 1 0
-Recursion Reverse : 0 1 2 3 4 5 6 7 8 9
+Case #1: 2 4 5
+Case #2: 2
+Case #3: 1 3
+Case #4: 1 8 1 4
+Case #5: 1 2 3 5
 
 */
 
@@ -101,113 +107,71 @@ class Node
 public:
     int data;
     Node *next;
+
     Node(int val)
     {
-        this->data = val;
+        data = val;
         next = NULL;
     }
 };
 
-void insertionAtTail(Node *&head, int val)
+void print(Node *root)
 {
-    // allocate node
-    Node *n = new Node(val);
-    if (head == NULL)
-    {
-        // Make next of new node as head
-        n->next = head;
-        // move the head to point to the new node
-        head = n;
-    }
-    else
-    {
-        // Storing head node
-        Node *temp = head;
-        // traverse till the last node
-        while (temp->next != NULL)
-        {
-            temp = temp->next;
-        }
-        // Change the next of last node
-        temp->next = n;
-    }
-}
-
-Node *iterativeReverse(Node *&head)
-{
-    // taking three pointers to store the current, previous and next nodes.
-    Node *current = head;
-    Node *prev = NULL;
-    Node *next = current->next;
-    while (current != NULL)
-    {
-        // taking the next node as next.
-        next = current->next;
-
-        // storing the previous node in link part of current node.
-        current->next = prev;
-
-        // updating prev from previous node to current node.
-        prev = current;
-
-        // updating current node to next node.
-        current = next;
-    }
-    return prev;
-}
-
-Node *recursionReverse(Node *head)
-{
-
-    if (head == NULL)
-    {
-        return NULL;
-    }
-    else if (head->next == NULL)
-    {
-        return head;
-    }
-    else
-    {
-        // reverse the rest list and put
-        //  the first element at the end
-        Node *rest = recursionReverse(head->next);
-        head->next->next = head;
-        head->next = NULL;
-        // fix the head pointer
-        return rest;
-    }
-}
-
-void display(Node *&head)
-{
-    Node *temp = head;
+    Node *temp = root;
     while (temp != NULL)
     {
         cout << temp->data << " ";
         temp = temp->next;
     }
-    cout << endl;
+}
+
+// Function to remove duplicates from sorted linked list.
+Node *removeDuplicates(Node *head)
+{
+    // using a pointer to iterate over linked list.
+    Node *current = head;
+
+    // traversing through the linked list.
+    while (current->next != NULL)
+    {
+        // if data at current node and next node are same, we store the node
+        // next to the next node of current node in link of current node.
+        if (current->data == current->next->data)
+        {
+            current->next = current->next->next;
+        }
+        // else we just move the pointer to next node.
+        else
+        {
+            current = current->next;
+        }
+    }
+    return head;
 }
 
 void solve()
 {
+    int K;
+    cin >> K;
     Node *head = NULL;
-    int n, val;
-    cin >> n;
-    for (int i = 0; i < n; i++)
+    Node *temp = head;
+
+    for (int i = 0; i < K; i++)
     {
-        cin >> val;
-        insertionAtTail(head, val);
+        int data;
+        cin >> data;
+        if (head == NULL)
+            head = temp = new Node(data);
+        else
+        {
+            temp->next = new Node(data);
+            temp = temp->next;
+        }
     }
-    cout << "List : ";
-    display(head);
-    cout << "Iterative Reverse : ";
-    head = iterativeReverse(head);
-    display(head);
-    cout << "Recursion Reverse : ";
-    head = recursionReverse(head);
-    display(head);
+
+    Node *result = removeDuplicates(head);
+    print(result);
+    cout << endl;
 }
 
 int main(int argc, char const *argv[])
@@ -223,7 +187,7 @@ int main(int argc, char const *argv[])
     cin >> t;
     while (t--)
     {
-        cout << "Case #" << case_num++ << ":\n";
+        cout << "Case #" << case_num++ << ": ";
         solve();
     }
 

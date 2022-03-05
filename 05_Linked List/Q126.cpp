@@ -73,26 +73,32 @@ void file_i_o()
 }
 
 /*
-Q125.) Write a Program to reverse the Linked List. (Both Iterative and recursive)
+Q126.) Reverse a Linked List in group of Given Size. [Very Imp]
 
 INPUT:
-2
+4
 
 5
 1 2 3 4 5
+2
 
 10
 0 1 2 3 4 5 6 7 8 9
+4
+
+5
+1 2 3 4 5
+3
+
+8
+1 2 2 4 5 6 7 8
+4
 
 OUTPUT:
-Case #1:
-List : 1 2 3 4 5
-Iterative Reverse : 5 4 3 2 1
-Recursion Reverse : 1 2 3 4 5
-Case #2:
-List : 0 1 2 3 4 5 6 7 8 9
-Iterative Reverse : 9 8 7 6 5 4 3 2 1 0
-Recursion Reverse : 0 1 2 3 4 5 6 7 8 9
+Case #1: 2 1 4 3 5
+Case #2: 3 2 1 0 7 6 5 4 9 8
+Case #3: 3 2 1 5 4
+Case #4: 4 2 2 1 8 7 6 5
 
 */
 
@@ -101,113 +107,84 @@ class Node
 public:
     int data;
     Node *next;
-    Node(int val)
+
+    Node(int x)
     {
-        this->data = val;
+        data = x;
         next = NULL;
     }
 };
 
-void insertionAtTail(Node *&head, int val)
+/* Function to print linked list */
+void printList(Node *head)
 {
-    // allocate node
-    Node *n = new Node(val);
-    if (head == NULL)
+    while (head != NULL)
     {
-        // Make next of new node as head
-        n->next = head;
-        // move the head to point to the new node
-        head = n;
-    }
-    else
-    {
-        // Storing head node
-        Node *temp = head;
-        // traverse till the last node
-        while (temp->next != NULL)
-        {
-            temp = temp->next;
-        }
-        // Change the next of last node
-        temp->next = n;
-    }
-}
-
-Node *iterativeReverse(Node *&head)
-{
-    // taking three pointers to store the current, previous and next nodes.
-    Node *current = head;
-    Node *prev = NULL;
-    Node *next = current->next;
-    while (current != NULL)
-    {
-        // taking the next node as next.
-        next = current->next;
-
-        // storing the previous node in link part of current node.
-        current->next = prev;
-
-        // updating prev from previous node to current node.
-        prev = current;
-
-        // updating current node to next node.
-        current = next;
-    }
-    return prev;
-}
-
-Node *recursionReverse(Node *head)
-{
-
-    if (head == NULL)
-    {
-        return NULL;
-    }
-    else if (head->next == NULL)
-    {
-        return head;
-    }
-    else
-    {
-        // reverse the rest list and put
-        //  the first element at the end
-        Node *rest = recursionReverse(head->next);
-        head->next->next = head;
-        head->next = NULL;
-        // fix the head pointer
-        return rest;
-    }
-}
-
-void display(Node *&head)
-{
-    Node *temp = head;
-    while (temp != NULL)
-    {
-        cout << temp->data << " ";
-        temp = temp->next;
+        cout << head->data << " ";
+        head = head->next;
     }
     cout << endl;
 }
 
+class Solution
+{
+public:
+    Node *reverse(Node *head, int k)
+    {
+        Node *current = head;
+        Node *next = NULL;
+        Node *prev = NULL;
+        int count = 0;
+
+        while (current != NULL && count < k)
+        // reversing k elements :
+        {
+            next = current->next; // marking next Node
+            current->next = prev; // reversing link
+            prev = current;       // updating prev
+            current = next;       // updating current
+            count++;
+        }
+
+        // checking if there are Nodes ahead
+        if (next != NULL)
+        {
+            head->next = reverse(next, k); // reversing those recursively
+        }
+
+        return prev; // returning new head
+    }
+};
+
 void solve()
 {
     Node *head = NULL;
-    int n, val;
+    Node *temp = NULL;
+    int n;
     cin >> n;
+
     for (int i = 0; i < n; i++)
     {
-        cin >> val;
-        insertionAtTail(head, val);
+        int value;
+        cin >> value;
+        if (i == 0)
+        {
+            head = new Node(value);
+            temp = head;
+        }
+        else
+        {
+            temp->next = new Node(value);
+            temp = temp->next;
+        }
     }
-    cout << "List : ";
-    display(head);
-    cout << "Iterative Reverse : ";
-    head = iterativeReverse(head);
-    display(head);
-    cout << "Recursion Reverse : ";
-    head = recursionReverse(head);
-    display(head);
+
+    int k;
+    cin >> k;
+
+    Solution ob;
+    head = ob.reverse(head, k);
+    printList(head);
 }
 
 int main(int argc, char const *argv[])
@@ -223,7 +200,7 @@ int main(int argc, char const *argv[])
     cin >> t;
     while (t--)
     {
-        cout << "Case #" << case_num++ << ":\n";
+        cout << "Case #" << case_num++ << ": ";
         solve();
     }
 

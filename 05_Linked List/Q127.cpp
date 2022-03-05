@@ -73,26 +73,42 @@ void file_i_o()
 }
 
 /*
-Q125.) Write a Program to reverse the Linked List. (Both Iterative and recursive)
+Q127.) Write a program to Detect loop in a linked list.
 
 INPUT:
-2
+6
 
 5
 1 2 3 4 5
+2
 
 10
 0 1 2 3 4 5 6 7 8 9
+0
+
+5
+1 2 3 4 5
+3
+
+8
+1 2 2 4 5 6 7 8
+4
+
+3
+1 3 4
+2
+
+4
+1 8 3 4
+0
 
 OUTPUT:
-Case #1:
-List : 1 2 3 4 5
-Iterative Reverse : 5 4 3 2 1
-Recursion Reverse : 1 2 3 4 5
-Case #2:
-List : 0 1 2 3 4 5 6 7 8 9
-Iterative Reverse : 9 8 7 6 5 4 3 2 1 0
-Recursion Reverse : 0 1 2 3 4 5 6 7 8 9
+Case #1: True
+Case #2: False
+Case #3: True
+Case #4: True
+Case #5: True
+Case #6: False
 
 */
 
@@ -101,113 +117,86 @@ class Node
 public:
     int data;
     Node *next;
+
     Node(int val)
     {
-        this->data = val;
+        data = val;
         next = NULL;
     }
 };
 
-void insertionAtTail(Node *&head, int val)
+void loopHere(Node *head, Node *tail, int position)
 {
-    // allocate node
-    Node *n = new Node(val);
-    if (head == NULL)
+    if (position == 0)
     {
-        // Make next of new node as head
-        n->next = head;
-        // move the head to point to the new node
-        head = n;
+        return;
     }
-    else
+
+    Node *walk = head;
+    for (int i = 1; i < position; i++)
     {
-        // Storing head node
-        Node *temp = head;
-        // traverse till the last node
-        while (temp->next != NULL)
+        walk = walk->next;
+    }
+    tail->next = walk;
+}
+
+class Solution
+{
+public:
+    // Function to check if the linked list has a loop.
+    // Floyd's Cycle-Finding Algorithm
+    bool detectLoop(Node *head)
+    {
+        if (!head)
         {
-            temp = temp->next;
+            return false;
         }
-        // Change the next of last node
-        temp->next = n;
+        // using two pointers and moving one pointer(slow) by one node and
+        // another pointer(fast) by two nodes in each iteration.
+        Node *fast = head->next, *slow = head;
+
+        while (slow && fast && fast->next)
+        {
+            // Move one pointer(slow_p) by one and another pointer(fast_p) by two.
+            fast = fast->next->next;
+            slow = slow->next;
+
+            // If these pointers meet at the same node then there is a loop
+            if (slow == fast)
+            {
+                return true;
+            }
+        }
+        // If pointers do not meet then linked list doesn't have a loop.
+        return false;
     }
-}
-
-Node *iterativeReverse(Node *&head)
-{
-    // taking three pointers to store the current, previous and next nodes.
-    Node *current = head;
-    Node *prev = NULL;
-    Node *next = current->next;
-    while (current != NULL)
-    {
-        // taking the next node as next.
-        next = current->next;
-
-        // storing the previous node in link part of current node.
-        current->next = prev;
-
-        // updating prev from previous node to current node.
-        prev = current;
-
-        // updating current node to next node.
-        current = next;
-    }
-    return prev;
-}
-
-Node *recursionReverse(Node *head)
-{
-
-    if (head == NULL)
-    {
-        return NULL;
-    }
-    else if (head->next == NULL)
-    {
-        return head;
-    }
-    else
-    {
-        // reverse the rest list and put
-        //  the first element at the end
-        Node *rest = recursionReverse(head->next);
-        head->next->next = head;
-        head->next = NULL;
-        // fix the head pointer
-        return rest;
-    }
-}
-
-void display(Node *&head)
-{
-    Node *temp = head;
-    while (temp != NULL)
-    {
-        cout << temp->data << " ";
-        temp = temp->next;
-    }
-    cout << endl;
-}
+};
 
 void solve()
 {
-    Node *head = NULL;
-    int n, val;
+    int n, num;
     cin >> n;
-    for (int i = 0; i < n; i++)
+
+    Node *head, *tail;
+    cin >> num;
+    head = tail = new Node(num);
+
+    for (int i = 0; i < n - 1; i++)
     {
-        cin >> val;
-        insertionAtTail(head, val);
+        cin >> num;
+        tail->next = new Node(num);
+        tail = tail->next;
     }
-    cout << "List : ";
-    display(head);
-    cout << "Iterative Reverse : ";
-    head = iterativeReverse(head);
-    display(head);
-    cout << "Recursion Reverse : ";
-    head = recursionReverse(head);
-    display(head);
+
+    int pos;
+    cin >> pos;
+    loopHere(head, tail, pos);
+
+    Solution ob;
+    if (ob.detectLoop(head))
+        cout << "True\n";
+    else
+        cout << "False\n";
 }
 
 int main(int argc, char const *argv[])
@@ -223,7 +212,7 @@ int main(int argc, char const *argv[])
     cin >> t;
     while (t--)
     {
-        cout << "Case #" << case_num++ << ":\n";
+        cout << "Case #" << case_num++ << ": ";
         solve();
     }
 
