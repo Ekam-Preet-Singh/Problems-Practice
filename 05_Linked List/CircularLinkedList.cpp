@@ -61,14 +61,11 @@ void err(istream_iterator<string> it, T a, Args... args)
     cout << *it << " = " << a << endl;
     err(++it, args...);
 }
-//typedef tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update> pbds;
-//typedef trie<string,null_type,trie_string_access_traits<>,pat_trie_tag,trie_prefix_search_node_update> pbtrie;
+// typedef tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update> pbds;
+// typedef trie<string,null_type,trie_string_access_traits<>,pat_trie_tag,trie_prefix_search_node_update> pbtrie;
 
 void file_i_o()
 {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
 #ifndef ONLINE_JUDGE
     freopen("input.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
@@ -89,10 +86,13 @@ public:
 
 void insertionAtHead(Node *&head, int val)
 {
+    // Creating a node dynamically.
     Node *n = new Node(val);
     if (head == NULL)
     {
         head = n;
+        // Note : list was empty. We link single node
+        // to itself.
         n->next = head;
     }
     else
@@ -102,6 +102,7 @@ void insertionAtHead(Node *&head, int val)
         {
             temp = temp->next;
         }
+        // Adjusting the links.
         temp->next = n;
         n->next = head;
         head = n;
@@ -110,7 +111,7 @@ void insertionAtHead(Node *&head, int val)
 
 void insertionAtTail(Node *&head, int val)
 {
-
+    // Creating a node dynamically.
     Node *n = new Node(val);
     Node *temp = head;
     while (temp->next != head)
@@ -119,9 +120,12 @@ void insertionAtTail(Node *&head, int val)
     }
     n->next = n;
     if (head == NULL)
+    {
         head = n;
+    }
     else
     {
+        // Adjusting the links.
         n->next = head;
         temp->next = n;
     }
@@ -300,23 +304,20 @@ void solve()
 
 int main(int argc, char const *argv[])
 {
-#ifndef ONLINE_JUDGE
-    clock_t begin = clock();
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
     file_i_o();
-#endif
 
     ll t = 1;
-    // ll case_num = 1;
-    // cin >> t;
+    ll case_num = 1;
+    cin >> t;
     while (t--)
     {
-        // cout << "Case #" << case_num++ << ": ";
+        cout << "Case #" << case_num++ << ":\n";
         solve();
     }
 
-#ifndef ONLINE_JUDGE
-    clock_t end = clock();
-    cout << "\n\nExecuted In: " << double(end - begin) / CLOCKS_PER_SEC * 1000 << " ms";
-#endif
     return 0;
 }
