@@ -1,0 +1,5 @@
+It’s depends on type of link list,
+
+If its a doubly link list,you can surely do it in constant time.Just,by changing its head as tail and vice versa.
+But,if its a singly link list,you have to traverse all the alement in order to change refrences of each node.Which will take o(n) either you do it in itterative way or recursive way,doesn’t matter.
+It will be better if you use iterative way,because time complexity for both Revursive and iterative is same “o(n)”.But,using iteration it can solved in contant space. So,somehow it can save your memory buffer.
