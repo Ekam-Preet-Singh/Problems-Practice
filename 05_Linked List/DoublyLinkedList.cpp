@@ -61,14 +61,11 @@ void err(istream_iterator<string> it, T a, Args... args)
     cout << *it << " = " << a << endl;
     err(++it, args...);
 }
-//typedef tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update> pbds;
-//typedef trie<string,null_type,trie_string_access_traits<>,pat_trie_tag,trie_prefix_search_node_update> pbtrie;
+// typedef tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update> pbds;
+// typedef trie<string,null_type,trie_string_access_traits<>,pat_trie_tag,trie_prefix_search_node_update> pbtrie;
 
 void file_i_o()
 {
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
 #ifndef ONLINE_JUDGE
     freopen("input.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
@@ -199,7 +196,7 @@ void deleteAllNodes(Node *&head)
     {
         temp = head;
         head = head->next;
-        free(temp);
+        delete temp;
     }
     cout << "<----DELETED---->";
 }
@@ -260,31 +257,15 @@ void solve()
     cout << "Deletion at All  : ";
     deleteAllNodes(head);
     display(head);
-
-    // Node *head = NULL;
-    // int n, val=0;
-    // cin >> n;
-    // insertionAtHead(head, val);
-    // for (int i = 0; i < n ; i++)
-    // {
-    //     cin >> val;
-    //     insertionAtTail(head, val);
-    // }
-    // insertionAtMid(head, 4, 6);
-    // display(head);
-    // deletionAtMid(head, 3);
-    // deletionAtHead(head);
-    // deletionAtTail(head);
-    // display(head);
-    // deleteAllNodes(head);
 }
 
 int main(int argc, char const *argv[])
 {
-#ifndef ONLINE_JUDGE
-    clock_t begin = clock();
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
     file_i_o();
-#endif
 
     ll t = 1;
     ll case_num = 1;
@@ -295,9 +276,5 @@ int main(int argc, char const *argv[])
         solve();
     }
 
-#ifndef ONLINE_JUDGE
-    clock_t end = clock();
-    cout << "\n\nExecuted In: " << double(end - begin) / CLOCKS_PER_SEC * 1000 << " ms";
-#endif
     return 0;
 }
