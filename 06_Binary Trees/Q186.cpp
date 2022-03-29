@@ -72,28 +72,47 @@ void file_i_o()
 #endif
 }
 
-// Largest value in each level
+/*
+Q186.) Sum of Nodes on the Longest path from root to leaf node
 
-// Tree Node
+INPUT:
+2
+
+4 2 5 7 1 2 3 N N 6 N N N N N
+
+1 2 3 4 5 6 7
+
+OUTPUT:
+Case #1: 13
+Case #2: 11
+
+*/
+
 struct Node
 {
     int data;
-    Node *left;
-    Node *right;
+    struct Node *left;
+    struct Node *right;
+
+    Node(int x)
+    {
+        data = x;
+        left = NULL;
+        right = NULL;
+    }
 };
 
-// Utility function to create a new Tree Node
-Node *newNode(int val)
+void printInorder(Node *node)
 {
-    Node *temp = new Node;
-    temp->data = val;
-    temp->left = NULL;
-    temp->right = NULL;
-
-    return temp;
+    if (node == NULL)
+    {
+        return;
+    }
+    printInorder(node->left);
+    cout << node->data << " ";
+    printInorder(node->right);
 }
 
-// Function to Build Tree
 Node *buildTree(string str)
 {
     // Corner Case
@@ -109,7 +128,7 @@ Node *buildTree(string str)
         ip.push_back(str);
 
     // Create the root of the tree
-    Node *root = newNode(stoi(ip[0]));
+    Node *root = new Node(stoi(ip[0]));
 
     // Push the root to the queue
     queue<Node *> queue;
@@ -131,8 +150,8 @@ Node *buildTree(string str)
         if (currVal != "N")
         {
 
-            // Create the left child for the current node
-            currNode->left = newNode(stoi(currVal));
+            // Create the left child for the current Node
+            currNode->left = new Node(stoi(currVal));
 
             // Push it to the queue
             queue.push(currNode->left);
@@ -149,7 +168,7 @@ Node *buildTree(string str)
         {
 
             // Create the right child for the current node
-            currNode->right = newNode(stoi(currVal));
+            currNode->right = new Node(stoi(currVal));
 
             // Push it to the queue
             queue.push(currNode->right);
@@ -163,54 +182,47 @@ Node *buildTree(string str)
 class Solution
 {
 public:
-    void helper(vector<int> &res, Node *root, int d)
+    void sumOfLongRootToLeafPathUtil(Node *root, int sum, int len, int &maxLen, int &maxSum)
     {
         if (!root)
+        {
+            if (maxLen < len)
+            {
+                maxLen = len;
+                maxSum = sum;
+            }
+            else if (maxLen == len && maxSum < sum)
+            {
+                maxSum = sum;
+            }
             return;
-
-        // Expand list size
-        if (d == res.size())
-        {
-            res.push_back(root->data);
         }
-
-        else
-        {
-            // to ensure largest value
-            // on level is being stored
-            res[d] = max(res[d], root->data);
-        }
-
-        // Recursively traverse left and
-        // right subtrees in order to find
-        // out the largest value on each level
-        helper(res, root->left, d + 1);
-        helper(res, root->right, d + 1);
+        sumOfLongRootToLeafPathUtil(root->left, sum + root->data, len + 1, maxLen, maxSum);
+        sumOfLongRootToLeafPathUtil(root->right, sum + root->data, len + 1, maxLen, maxSum);
     }
 
-    // function to find largest values
-public:
-    vector<int> largestValues(Node *root)
+    int sumOfLongRootToLeafPath(Node *root)
     {
-        vector<int> res;
-        helper(res, root, 0);
-        return res;
+        if (!root)
+        {
+            return 0;
+        }
+        // code here
+        int maxSum = INT_MIN, maxLen = 0;
+        sumOfLongRootToLeafPathUtil(root, 0, 0, maxLen, maxSum);
+        return maxSum;
     }
 };
 
 void solve()
 {
-    string inp;
-    getline(cin, inp);
-
-    struct Node *root = buildTree(inp);
-    Solution ob;
-    vector<int> ans = ob.largestValues(root);
-
-    for (int i = 0; i < ans.size(); i++)
-        cout << ans[i] << " ";
-
-    cout << "\n";
+    // cin.ignore();
+    string treeString;
+    getline(cin, treeString);
+    Node *root = buildTree(treeString);
+    Solution obj;
+    int res = obj.sumOfLongRootToLeafPath(root);
+    cout << res << "\n";
 }
 
 int main(int argc, char const *argv[])
@@ -222,11 +234,11 @@ int main(int argc, char const *argv[])
     file_i_o();
 
     ll t = 1;
-    // ll case_num = 1;
-    cin >> t;
+    ll case_num = 1;
+    // cin >> t;
     while (t--)
     {
-        // cout << "Case #" << case_num++ << ": ";
+        cout << "Case #" << case_num++ << ": ";
         solve();
     }
 

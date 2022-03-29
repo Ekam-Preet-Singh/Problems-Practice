@@ -72,20 +72,76 @@ void file_i_o()
 #endif
 }
 
+/*
+Q188.) Find Largest subtree sum in a tree
+
+INPUT:
+1
+
+1 -2 3 4 5 -6 2
+
+OUTPUT:
+Case #1: 7
+
+*/
+
+// Structure of a tree node.
 struct Node
 {
-    int data;
-    Node *left;
-    Node *right;
+    int key;
+    Node *left, *right;
 
-    Node(int val)
+    Node(int x)
     {
-        data = val;
-        left = right = NULL;
+        key = x;
+        left = NULL;
+        right = NULL;
     }
 };
 
-// Function to Build Tree
+// Helper function to find largest
+// subtree sum recursively.
+int findLargestSubtreeSumUtil(Node *root, int &ans)
+{
+    // If current node is null then
+    // return 0 to parent node.
+    if (root == NULL)
+    {
+        return 0;
+    }
+
+    // Subtree sum rooted at current node.
+    int currSum = root->key + findLargestSubtreeSumUtil(root->left, ans) + findLargestSubtreeSumUtil(root->right, ans);
+
+    // Update answer if current subtree
+    // sum is greater than answer so far.
+    ans = max(ans, currSum);
+
+    // Return current subtree sum to
+    // its parent node.
+    return currSum;
+}
+
+// Function to find largest subtree sum.
+int findLargestSubtreeSum(Node *root)
+{
+    // If tree does not exist,
+    // then answer is 0.
+    if (root == NULL)
+    {
+        return 0;
+    }
+
+    // Variable to store maximum subtree sum.
+    int ans = INT_MIN;
+
+    // Call to recursive function to
+    // find maximum subtree sum.
+    findLargestSubtreeSumUtil(root, ans);
+
+    return ans;
+}
+
 Node *buildTree(string str)
 {
     // Corner Case
@@ -116,7 +172,7 @@ Node *buildTree(string str)
         Node *currNode = queue.front();
         queue.pop();
 
-        // Get the current Node's value from the string
+        // Get the current node's value from the string
         string currVal = ip[i];
 
         // If the left child is not null
@@ -140,7 +196,7 @@ Node *buildTree(string str)
         if (currVal != "N")
         {
 
-            // Create the right child for the current Node
+            // Create the right child for the current node
             currNode->right = new Node(stoi(currVal));
 
             // Push it to the queue
@@ -152,57 +208,12 @@ Node *buildTree(string str)
     return root;
 }
 
-class Solution
-{
-    int post(Node *root, int &res)
-    {
-        if (root == NULL)
-        {
-            return 1;
-        }
-        // post order
-        int left = post(root->left, res);
-        int right = post(root->right, res);
-        // its urgent to put vaccine , as its child needs are not covered.
-        if (left == -1 || right == -1)
-        {
-            ++res;
-            return 0;
-        }
-        // its one of the child has vaccine,So need of vaccine on root,
-        if (left == 0 || right == 0)
-        {
-            return 1;
-        }
-        // here left and right (both) are 1
-        // means that neither of the child has vaccine but they are covered.
-        // So I gave to ask parent to cover me.
-        else
-        {
-            return -1;
-        }
-    }
-
-public:
-    int supplyVaccine(Node *root)
-    {
-        int res = 0;
-        int x = post(root, res);
-        if (x == -1)
-        {
-            ++res;
-        }
-        return res;
-    }
-};
-
 void solve()
 {
     string treeString;
     getline(cin, treeString);
     Node *root = buildTree(treeString);
-    Solution ob;
-    cout << ob.supplyVaccine(root) << "\n";
+    cout << findLargestSubtreeSum(root) << endl;
 }
 
 int main(int argc, char const *argv[])
@@ -214,11 +225,11 @@ int main(int argc, char const *argv[])
     file_i_o();
 
     ll t = 1;
-    // ll case_num = 1;
+    ll case_num = 1;
     cin >> t;
     while (t--)
     {
-        // cout << "Case #" << case_num++ << ": ";
+        cout << "Case #" << case_num++ << ": ";
         solve();
     }
 

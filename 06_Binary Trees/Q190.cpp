@@ -72,24 +72,36 @@ void file_i_o()
 #endif
 }
 
-// Tree Node
+/*
+Q190.) Print all "K" Sum paths in a Binary tree
+
+INPUT:
+2
+
+1 2 3
+3
+
+1 3 -1 2 1 4 5 N N 1 N 1 2 N 6
+5
+
+OUTPUT:
+Case #1: 3
+Case #2: 8
+
+*/
+
 struct Node
 {
     int data;
     Node *left;
     Node *right;
+
+    Node(int val)
+    {
+        data = val;
+        left = right = NULL;
+    }
 };
-
-// Utility function to create a new Tree Node
-Node *newNode(int val)
-{
-    Node *temp = new Node;
-    temp->data = val;
-    temp->left = NULL;
-    temp->right = NULL;
-
-    return temp;
-}
 
 // Function to Build Tree
 Node *buildTree(string str)
@@ -107,7 +119,7 @@ Node *buildTree(string str)
         ip.push_back(str);
 
     // Create the root of the tree
-    Node *root = newNode(stoi(ip[0]));
+    Node *root = new Node(stoi(ip[0]));
 
     // Push the root to the queue
     queue<Node *> queue;
@@ -122,15 +134,15 @@ Node *buildTree(string str)
         Node *currNode = queue.front();
         queue.pop();
 
-        // Get the current node's value from the string
+        // Get the current Node's value from the string
         string currVal = ip[i];
 
         // If the left child is not null
         if (currVal != "N")
         {
 
-            // Create the left child for the current node
-            currNode->left = newNode(stoi(currVal));
+            // Create the left child for the current Node
+            currNode->left = new Node(stoi(currVal));
 
             // Push it to the queue
             queue.push(currNode->left);
@@ -146,8 +158,8 @@ Node *buildTree(string str)
         if (currVal != "N")
         {
 
-            // Create the right child for the current node
-            currNode->right = newNode(stoi(currVal));
+            // Create the right child for the current Node
+            currNode->right = new Node(stoi(currVal));
 
             // Push it to the queue
             queue.push(currNode->right);
@@ -161,38 +173,71 @@ Node *buildTree(string str)
 class Solution
 {
 public:
-    // Function to calculate maximum path product.
-    ll getProduct(Node *root)
+    void sumK_util(Node *root, int sum, int cur, int &ans, unordered_map<int, int> &mp)
     {
-        ll prod = 1;
-
-        if (root == NULL)
+        if (!root)
         {
-            return prod;
+            return;
         }
 
-        prod = max(prod, getProduct(root->left));
+        ans += mp[cur + root->data - sum];
 
-        prod = max(prod, getProduct(root->right));
+        if (ans >= mod)
+        {
+            ans %= mod;
+        }
 
-        return prod * root->data;
+        if (cur + root->data == sum)
+        {
+            ans++;
+        }
+
+        if (ans >= mod)
+        {
+            ans %= mod;
+        }
+
+        mp[cur + root->data]++;
+
+        if (mp[cur + root->data] >= mod)
+        {
+            mp[cur + root->data] %= mod;
+        }
+
+        sumK_util(root->left, sum, cur + root->data, ans, mp);
+        sumK_util(root->right, sum, cur + root->data, ans, mp);
+
+        mp[cur + root->data]--;
+
+        if (mp[cur + root->data] < 0)
+        {
+            mp[cur + root->data] += mod;
+        }
     }
 
-    // Function to return maximum path product from any node in a tree.
-    ll findMaxScore(Node *root)
+    int sumK(Node *root, int k)
     {
-        ll res = getProduct(root);
-        return res;
+        int ans = 0;
+
+        unordered_map<int, int> mp;
+
+        sumK_util(root, k, 0, ans, mp);
+
+        return ans;
     }
 };
 
 void solve()
 {
-    string treeString;
-    getline(cin, treeString);
+    string s, ch;
+    getline(cin, s);
+    Node *root = buildTree(s);
+
+    string key;
+    getline(cin, key);
+    int k = stoi(key);
     Solution ob;
-    Node *root = buildTree(treeString);
-    cout << ob.findMaxScore(root) << "\n";
+    cout << ob.sumK(root, k) << "\n";
 }
 
 int main(int argc, char const *argv[])
@@ -205,7 +250,7 @@ int main(int argc, char const *argv[])
 
     ll t = 1;
     ll case_num = 1;
-    cin >> t;
+    // cin >> t;
     while (t--)
     {
         cout << "Case #" << case_num++ << ": ";
