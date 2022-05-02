@@ -88,15 +88,21 @@ Case #2: 1
 
 */
 
+// Using Brian Kernighan's Algorithm
 class Solution
 {
 public:
     int setBits(int N)
     {
+        // Initialzing count
         int count = 0;
-        while (N)
+        while (N) // Checking if N != 0
         {
-            N &= (N - 1);
+            // Do bitwise & with (n-1) and assign the value back to n
+            /* Mapping single bit as as it will return 1 when doing & operation if
+             if all bits are mapped N will become 0 */
+            N = N & (N - 1);
+            // Increment count by 1
             count++;
         }
         return count;

@@ -97,21 +97,23 @@ public:
     {
         // Pass 1 :
         // Get the XOR of the two numbers we need to find
-        long long int diff = 0;
+        ll diff = 0;
         for (auto i : nums)
         {
             diff = i ^ diff;
         }
-        // Get its last set bit
-        diff &= -diff;
+        // Get its last set bit (Rightmost Bit)
+        diff = diff & ~(diff - 1);
         // Pass 2 :
         vector<int> rets = {0, 0}; // this vector stores the two numbers we will return
         for (int num : nums)
         {
+            // Xor of first set
             if ((num & diff) == 0) // the bit is not set
             {
                 rets[0] ^= num;
             }
+            // Xor of second set
             else // the bit is set
             {
                 rets[1] ^= num;
