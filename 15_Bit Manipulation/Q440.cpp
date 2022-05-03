@@ -73,7 +73,7 @@ void file_i_o()
 }
 
 /*
-Q440.) Program to find whether a number is power of two
+Q440.) Program to find whether a no is power of two
 
 INPUT:
 4
@@ -100,10 +100,12 @@ public:
     // Function to check if given number n is a power of two.
     bool isPowerofTwo(long long n)
     {
+
         if (n == 0)
         {
             return false;
         }
+
         // We use a counter variable to count number of set bits.
         int count = 0;
         while (n > 0)
@@ -111,7 +113,6 @@ public:
             // Increment of counter variable if we get 1 as the rightmost bit.
             count += (n & 1);
             // Right Shift n to remove the rightmost bit.
-            // Dividing n = n/2
             n >>= 1;
         }
         // returning true if number of set bits is 1 otherwise false.

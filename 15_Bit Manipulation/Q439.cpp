@@ -99,15 +99,6 @@ public:
         int count = 0;
 
         // Counting set bits from 1 to n.
-
-        /*
-        Every alternate bits in A are set.
-        Every 2 alternate bits in B are set.
-        Every 4 alternate bits in C are set.
-        Every 8 alternate bits in D are set.
-        .....
-        This will keep on repeating for every power of 2.
-        */
         for (int x = 2; x / 2 < n; x = x * 2)
         {
             // Total count of pairs of 0s and 1s.

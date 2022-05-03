@@ -91,10 +91,10 @@ Case #2: 3
 class Solution
 {
 public:
-    // To count set bits
+    // Function to count set bits
     int countSetBits(unsigned int n)
     {
-        // We use a count variable
+        // We use a counter variable
         unsigned int count = 0;
         while (n)
         {
@@ -113,7 +113,7 @@ public:
     {
 
         int ans = 0;
-        // XOR operation gives set bits only when there are dis-similar bits.
+        // XOR operation gives set bits only when there are dissimilar bits.
         // We store the value of XOR operation of a and b.
         ans = a ^ b;
 
